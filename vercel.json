@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/otp",
+      "destination": "https://script.google.com/macros/s/AKfycbwbbj3rVFst1XjH1IS-dGkEuwIZNDH59a2kHYXSZxeZ1E3h5OOodNB6xvBMEVQj5jGQ/exec"
+    },
+    {
+      "source": "/api/products",
+      "destination": "https://script.google.com/macros/s/AKfycbwkgqmaoa2NsL-PA2H0IB6DZymOoHrLRum_8_25pJmAp31F_ohvhBPeZi7sk8B3FOXX/exec"
+    }
+  ]
+}
