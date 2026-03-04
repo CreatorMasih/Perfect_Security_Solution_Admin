@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => ({
         rewrite: (path) =>
           path.replace(
             "/api/otp",
-            "/macros/s/AKfycbxtfN8H-6p8NggzdUeXFRhGEQGcf5dGgulFZI3aG15A9XZUhp4uzjvMxIuV1Qnh_tI/exec"
+            "/macros/s/AKfycbzyW_o-hoPN9yGBPljinl0ReLntfeS369xO_Rt--y1NKkgi2XL1xMwhLz-CkTfxM4PC/exec"
           ),
       },
 
