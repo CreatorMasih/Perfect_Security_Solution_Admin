@@ -7,7 +7,10 @@ interface AuthContextType {
   adminName: string;
   otpPending: boolean;
   pendingEmail: string;
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<{
+    success: boolean;
+    reason?: "missing_fields" | "missing_config" | "invalid_credentials" | "otp_send_failed";
+  }>;
   requestOtp: () => Promise<boolean>;
   verifyOtp: (otp: string) => Promise<boolean>;
   logout: () => void;
@@ -40,20 +43,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<{
+    success: boolean;
+    reason?: "missing_fields" | "missing_config" | "invalid_credentials" | "otp_send_failed";
+  }> => {
     const u = username.trim();
     const p = password.trim();
 
-    if (!u || !p) return false;
-    if (!ADMIN_CREDENTIALS.username || !ADMIN_CREDENTIALS.password) return false;
+    if (!u || !p) return { success: false, reason: "missing_fields" };
+    if (!ADMIN_CREDENTIALS.username || !ADMIN_CREDENTIALS.password) {
+      return { success: false, reason: "missing_config" };
+    }
 
     if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
       setOtpPending(true);
       setPendingEmail(ADMIN_CREDENTIALS.otpEmail || "your registered email");
-      return requestOtp();
+
+      const otpSent = await requestOtp();
+      if (!otpSent) {
+        setOtpPending(false);
+        setPendingEmail("");
+        return { success: false, reason: "otp_send_failed" };
+      }
+
+      return { success: true };
     }
 
-    return false;
+    return { success: false, reason: "invalid_credentials" };
   };
 
   const requestOtp = async (): Promise<boolean> => {

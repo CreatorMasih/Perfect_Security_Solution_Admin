@@ -33,15 +33,20 @@ const LoginPage = () => {
       return;
     }
 
-    // const success = login(username, password);
-       const success = await login(username, password);
-    
-    if (success) {
+    const result = await login(username, password);
+
+    if (result.success) {
       toast.success('OTP sent to your Email ID');
       // navigate('/admin');
       navigate('/admin/verify-otp');
     } else {
-      setError('Invalid username or password');
+      if (result.reason === 'missing_config') {
+        setError('Admin credentials are not configured. Check environment variables.');
+      } else if (result.reason === 'otp_send_failed') {
+        setError('Username/password are correct, but OTP could not be sent. Check OTP script deployment.');
+      } else {
+        setError('Invalid username or password');
+      }
       toast.error('Login failed');
     }
     
