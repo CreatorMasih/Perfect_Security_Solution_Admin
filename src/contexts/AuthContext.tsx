@@ -91,7 +91,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const verifyOtp = async (otp: string): Promise<boolean> => {
     try {
-      const res = await fetch(`${OTP_API_URL}?action=verifyOtp&otp=${encodeURIComponent(otp)}`);
+      const emailQuery = ADMIN_CREDENTIALS.otpEmail
+        ? `&email=${encodeURIComponent(ADMIN_CREDENTIALS.otpEmail)}`
+        : "";
+      const res = await fetch(`${OTP_API_URL}?action=verifyOtp&otp=${encodeURIComponent(otp)}${emailQuery}`);
       const data = await res.json();
 
       if (data?.success === true) {
